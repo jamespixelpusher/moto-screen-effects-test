@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Seriously.js Camera Demo</title>
+	<style>
+
+		#layer-effect-target{
+			position: absolute;
+			top: 0px;
+			left: 0px;
+		}
+
+		#layer-image-overlay{
+			position: absolute;
+			top: 380px;
+			left: 560px;
+			height: 70px;
+			width: 70px;
+		}
+
+		#layer-background-video{
+			position: absolute;
+			top: 60px;
+			left: 0;
+			width: 640px;
+			height: 480px;
+		}
+
+		#chroma-controls{
+			position: absolute;
+			top: 640px;
+			left: 10px;
+		}
+
+	</style>
+</head>
+<body>
+
+	<video id="layer-background-video" controls muted controls autoplay controls loop>
+		<source src="video/video-3.mp4" type="video/mp4">
+	</video>
+
+	<canvas id="layer-effect-target" width="640" height="480"></canvas>
+
+	<img id="layer-image-overlay" src="img/moto.png">
+
+	<div id="chroma-controls">
+		<label>weight <input type="range" id="weight" min="0" max="1" step="0.0001" value=".5"/></label>
+		<label>balance <input type="range" id="balance" min="0" max="1" step="0.0001" value=".5"/></label>
+		<label>clipBlack <input type="range" id="clipBlack" min="0" max="1" step="0.0001" value=".5"/></label>
+		<label>clipWhite <input type="range" id="clipWhite" min="0" max="1" step="0.0001" value=".5"/></label>
+	</div>
+
+	<script src="seriously.js"></script>
+	<script src="sources/seriously.camera.js"></script>
+	<script src="effects/seriously.edge.js"></script>
+	<script src="effects/seriously.kaleidoscope.js"></script>
+	<script src="effects/seriously.pixelate.js"></script>
+	<script src="effects/seriously.ascii.js"></script>
+	<script src="effects/seriously.dither.js"></script>
+	<script src="effects/seriously.emboss.js"></script>
+	<script src="effects/seriously.falsecolor.js"></script>
+	<script src="effects/seriously.hex.js"></script>
+	<script src="effects/seriously.invert.js"></script>
+	<script src="effects/seriously.opticalflow.js"></script>
+	<script src="effects/seriously.polar.js"></script>
+	<script src="effects/seriously.sketch.js"></script>
+	<script src="effects/seriously.chroma.js"></script>
+	<script src="effects/seriously.blur.js"></script>
+
+	<script>
+
+	(function() {
+
+		var seriously, 		// the main object that holds the entire composition
+			source, 		// wrapper object for source video
+			edge,
+			kaleidoscope,
+			pixelate,
+			ascii,
+			dither,
+			emboss,
+			falsecolor,
+			hex,
+			invert,
+			opticalflow,
+			polar,
+			sketch,
+			chroma,
+			blur,
+			target; 		// a wrapper object for our target canvas
+		if (Seriously.incompatible('camera')) {
+			document.body.appendChild(document.createTextNode('Sorry, your browser does not support getUserMedia'));
+			document.querySelector('canvas').style.display = 'none';
+			return;
+		}
+
+		// construct our seriously object
+		seriously = new Seriously();
+		// time to get serious
+		source = seriously.source('camera');
+		target = seriously.target('#layer-effect-target');
+
+		edge = seriously.effect('edge');
+		kaleidoscope = seriously.effect('kaleidoscope');
+		pixelate = seriously.effect('pixelate');
+		ascii = seriously.effect('ascii');
+		dither = seriously.effect('dither');
+		emboss = seriously.effect('emboss');
+		falsecolor = seriously.effect('falsecolor');
+		hex = seriously.effect('hex');
+		invert = seriously.effect('invert');
+		opticalflow = seriously.effect('opticalflow');
+		polar = seriously.effect('polar');
+		sketch = seriously.effect('sketch');
+		blur = seriously.effect('blur');
+
+		chroma = seriously.effect('chroma');
+		// connect all our nodes in the right order
+
+		//ascii
+		// ascii.source = source;
+		// target.source = ascii;
+
+		//dither
+		// dither.source = source;
+		// target.source = dither;
+
+		//emboss
+		// emboss.source = source;
+		// target.source = emboss;
+
+		//falsecolor
+		// falsecolor.source = source;
+		// target.source = falsecolor;
+
+		//invert
+		// invert.source = source;
+		// target.source = invert;
+
+		//opticalflow
+		// opticalflow.source = source;
+		// target.source = opticalflow;
+
+		//pixelate
+		// pixelate.source = source;
+		// pixelate.pixelSize = [8, 8];
+		// target.source = pixelate;
+
+		//sketch
+		// sketch.source = pixelate;
+		// target.source = sketch;
+
+		//blur
+		// blur.source = source;
+		// target.source = blur;
+
+		// chroma
+		chroma.source = source;
+		// target.source = chroma;
+
+		chroma.screen = [254 / 255, 129 / 255, 169 / 255, 1]
+		chroma.weight = '#weight';
+		chroma.balance = '#balance';
+		chroma.clipBlack = '#clipBlack';
+		chroma.clipWhite = '#clipWhite';
+
+		//pixelate
+		// pixelate.source = chroma;
+		// pixelate.pixelSize = [4, 4];
+		// target.source = pixelate;
+
+		//hex
+		hex.source = chroma;
+		target.source = hex;
+
+		//polar
+		// polar.source = source;
+		// polar.angle = 180;
+		// target.source = polar;
+
+		seriously.go();
+
+	}());
+
+	</script>
+
+</body>
+
+</html>
